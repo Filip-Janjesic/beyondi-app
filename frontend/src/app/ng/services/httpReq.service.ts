@@ -1,0 +1,66 @@
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+
+
+
+@Injectable()
+export class HttpReq {
+
+  constructor(
+    private httpClient: HttpClient,
+    @Inject('ENV') private ENV: any,
+  ) { }
+
+
+  authHeader(authtoken = '') {
+    if (!authtoken) { throw new Error('The "authtoken" is not defined.'); }
+    const headers = new HttpHeaders().set('X-Authtoken', authtoken);
+    const httpOptions = { headers };
+    return httpOptions;
+  }
+
+
+  /**
+
+   * @param defs - header definitions: {'X-Authtoken': 'abc', 'Agent-Host': '65.21.184.0:9021'}]
+   */
+  defineRequestHeaders(defs: any) {
+    if (this.ENV.envName === 'lokal') { delete defs['Agent-Host']; }
+    let headers = new HttpHeaders();
+    for (const prop in defs) { headers = headers.append(prop.toString(), defs[prop].toString()); }
+    return headers;
+  }
+
+
+  ask(url: string, method = 'GET', body: any, httpOptions: any) {
+    method = method.toLowerCase();
+
+    return new Promise((resolve, reject) => {
+      if (method === 'get') {
+        this.httpClient.get(url, httpOptions)
+          .subscribe({
+            next: (apiResp: any) => {
+              resolve(apiResp);
+            },
+            error: (err: HttpErrorResponse) => {
+              reject(err);
+            }
+          });
+      } else if (method === 'post') {
+        this.httpClient.post(url, body, httpOptions)
+          .subscribe({
+            next: (apiResp: any) => {
+              resolve(apiResp);
+            },
+            error: (err: HttpErrorResponse) => {
+              reject(err);
+            }
+          });
+      }
+
+    });
+
+  }
+
+
+}
