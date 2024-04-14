@@ -8,7 +8,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({ name: 'yesno' })
 export class YesnoPipe implements PipeTransform {
-  rez: string;
+  rez: string | undefined;
   transform(value: boolean, uppercase_tf: boolean): string {
     this.rez = !!value ? 'yes' : 'no';
     if (uppercase_tf) {
