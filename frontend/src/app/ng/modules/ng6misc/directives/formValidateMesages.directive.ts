@@ -10,12 +10,13 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormValidateMessagesDirective implements OnInit {
 
-  @Input() appFormValidateMessages: { id: string, FG: FormGroup; onevents: [string]; };
+  @Input()
+  appFormValidateMessages!: { id: string; FG: FormGroup; onevents: [string]; };
   @HostBinding('class') className: string;
-  private FG: FormGroup;
-  private onevents: [string]; // 'blur', 'input' -> INPUT tag , 'change' -> SELECT tag
-  private id: string; // <input id="first_name"> => id = 'first_name'
-  private field: string;
+  private FG!: FormGroup;
+  private onevents!: [string]; // 'blur', 'input' -> INPUT tag , 'change' -> SELECT tag
+  private id!: string; // <input id="first_name"> => id = 'first_name'
+  private field!: string;
 
   constructor(
     private el: ElementRef,
@@ -68,7 +69,7 @@ export class FormValidateMessagesDirective implements OnInit {
 
 
   // define error message
-  getErrMessage(field) {
+  getErrMessage(field: string) {
     const ctrl = this.FG.controls[field];
     let errorMsg;
 
@@ -95,7 +96,7 @@ export class FormValidateMessagesDirective implements OnInit {
 
 
   // show error in HTML
-  showError(errorMsg) {
+  showError(errorMsg: string) {
     const parent = this.el.nativeElement.parentNode;
     const span = __ngRendererCreateElementHelper(this.renderer, parent, 'span');
     this.renderer.addClass(span, 'invalid-feedback');
